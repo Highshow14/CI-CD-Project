@@ -21,12 +21,12 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t $DOCKERHUB_USER/flask-mongo-appp:latest .
+          command: docker build -t $highshow14/flask-mongo-appp:latest .
       - run:
           name: Push to Docker Hub
           command: |
             echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-            docker push $DOCKERHUB_USER/flask-mongo-appp:latest
+            docker push $highshow14/flask-mongo-appp:latest
 
 workflows:
   version: 2

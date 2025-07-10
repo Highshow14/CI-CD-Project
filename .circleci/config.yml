@@ -4,13 +4,25 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
-  build-and-test:
+  install-dependencies:
     docker:
       - image: cimg/node:18.20
     steps:
       - checkout
-      - node/install-packages
+      - run: npm ci
+
+  lint:
+    docker:
+      - image: cimg/node:18.20
+    steps:
+      - checkout
       - run: npm run lint
+
+  test:
+    docker:
+      - image: cimg/node:18.20
+    steps:
+      - checkout
       - run: npm test
 
   docker-publish:
@@ -32,7 +44,13 @@ workflows:
   version: 2
   build-test-deploy:
     jobs:
-      - build-and-test
+      - install-dependencies
+      - lint:
+          requires:
+            - install-dependencies
+      - test:
+          requires:
+            - lint
       - docker-publish:
           requires:
-            - build-and-test
+            - test

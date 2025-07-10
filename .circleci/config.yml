@@ -16,14 +16,16 @@ jobs:
       - image: cimg/node:18.20
     steps:
       - checkout
-      - run: npm ci       # ✅ installs all dependencies
+      - run: npm ci
       - run: npm run lint
 
-  test:
+  build-and-test:
     docker:
       - image: cimg/node:18.20
     steps:
       - checkout
+      - run: npm ci
+      - run: npm run lint
       - run: npm test
 
   docker-publish:
@@ -49,9 +51,9 @@ workflows:
       - lint:
           requires:
             - install-dependencies
-      - test:
+      - build-and-test:
           requires:
             - lint
       - docker-publish:
           requires:
-            - test
+            - build-and-test
